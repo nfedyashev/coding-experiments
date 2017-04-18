@@ -38,7 +38,7 @@ func initIDSeq() func() int {
 	}
 }
 
-func customerProducer(customers chan Customer) {
+func customerProducer(customers chan<- Customer) {
 	nextId := initIDSeq()
 
 	for {
@@ -50,7 +50,7 @@ func customerProducer(customers chan Customer) {
 	}
 }
 
-func customerListener(barber Barber, customers chan Customer, customersWaitingInWaitingRoom chan Customer) {
+func customerListener(barber Barber, customers <-chan Customer, customersWaitingInWaitingRoom chan Customer) {
 	for {
 		select {
 		case customer := <-customers:
