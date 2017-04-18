@@ -7,6 +7,7 @@ package main
 import (
 	"bytes"
 	"log"
+	"math/rand"
 	"net/http"
 	"time"
 
@@ -130,5 +131,13 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
 	client.hub.register <- client
 	go client.writePump()
+
+	go func(client *Client) {
+		time.Sleep(time.Millisecond * time.Duration(rand.Intn(5500)))
+
+		client.hub.broadcast <- []byte(`{"type": "MESSAGE_SENT", "value": "pass some ads"}`)
+
+	}(client)
+
 	client.readPump()
 }
